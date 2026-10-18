@@ -15,7 +15,7 @@ pnpm build:pages # GitHub Pages用ビルド（/babyfood-zukan-codex/ 配下で�
 
 ## 公開URL
 
-https://hug190507.github.io/babyfood-zukan-codex/ （Codex版・gh-pagesブランチから配信）
+https://hug-inc.github.io/babyfood-zukan-codex/ （Codex版・gh-pagesブランチから配信）
 
 Claude版（`babyfood-zukan`）とは別リポジトリ・別URLで管理します。
 
