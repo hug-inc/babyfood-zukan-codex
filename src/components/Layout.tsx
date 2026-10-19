@@ -149,7 +149,7 @@ function Footer() {
           </nav>
         </div>
         <p className="mt-6 rounded-2xl bg-white px-4 py-3 text-xs leading-relaxed text-ink-soft">
-          本サイトに掲載している商品情報は、てでもぐを除きすべて架空のサンプル（デモデータ）です。実在するメーカー名は「メーカーから探す」の一覧にのみ使用しており、各社の商品情報は掲載していません。
+          本サイトに掲載している商品情報は、てでもぐを除きすべて架空のサンプル（デモデータ）です。実在するメーカー名は検索条件のメーカー一覧にのみ使用しており、各社の商品情報は掲載していません。
         </p>
         <p className="mt-6 text-center text-xs text-ink-mute">
           運営：株式会社HUG
