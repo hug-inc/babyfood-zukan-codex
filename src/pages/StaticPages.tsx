@@ -20,7 +20,7 @@ export function CompanyPage() {
       <dl className="card divide-y divide-cream-200">
         {[
           ['会社名', '株式会社HUG'],
-          ['サービス名', 'ベビーフードずかん'],
+          ['サービス名', '離乳食ずかん'],
           ['事業内容', 'ベビーフード検索・比較メディアの運営、ベビーフードブランド「てでもぐ（TEDEMOGU）」の企画・販売'],
         ].map(([k, v]) => (
           <div key={k} className="grid grid-cols-[96px_1fr] gap-3 px-4 py-3 md:grid-cols-[140px_1fr]">
@@ -73,7 +73,7 @@ export function ContactPage() {
 export function TermsPage() {
   return (
     <Page title="利用規約">
-      <p>本規約は、株式会社HUG（以下「当社」）が運営する「ベビーフードずかん」（以下「本サービス」）の利用条件を定めるものです。</p>
+      <p>本規約は、株式会社HUG（以下「当社」）が運営する「離乳食ずかん」（以下「本サービス」）の利用条件を定めるものです。</p>
       <p>本サービスに掲載する商品情報は、各メーカーから提供された情報等をもとにしていますが、その正確性・最新性を保証するものではありません。ご購入・ご利用の際は、各商品の表示や公式サイトをご確認ください。</p>
       <p>本サービスは商品の販売・決済を行いません。商品の購入は各メーカーの公式ECサイトにて、当該サイトの規約に従って行われます。</p>
       <p className="text-sm text-ink-mute">※ デモ版のため、規約はサンプル文面です。</p>
@@ -94,7 +94,7 @@ export function PrivacyPage() {
 export function ForMakersPage() {
   return (
     <Page title="メーカーの方へ">
-      <p>「ベビーフードずかん」は、月齢や食材からベビーフードを探すご家庭と、メーカーの皆さまをつなぐ検索・比較メディアです。</p>
+      <p>「離乳食ずかん」は、月齢や食材からベビーフードを探すご家庭と、メーカーの皆さまをつなぐ検索・比較メディアです。</p>
       <section id="free" className="card scroll-mt-24 p-5">
         <h2 className="flex items-center gap-2 text-lg font-bold">
           <Store className="h-5 w-5 text-brand-500" aria-hidden />
