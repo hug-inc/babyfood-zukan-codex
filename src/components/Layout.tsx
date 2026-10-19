@@ -17,7 +17,7 @@ const NAV = [
 
 export function Logo({ className = '' }: { className?: string }) {
   return (
-    <Link to="/" className={`flex items-center gap-2 rounded-xl ${className}`} aria-label="ベビーフードずかん トップへ">
+    <Link to="/" className={`flex items-center gap-2 rounded-xl ${className}`} aria-label="離乳食ずかん トップへ">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-brand-500 shadow-card md:h-10 md:w-10" aria-hidden>
         <svg viewBox="0 0 32 32" className="h-6 w-6">
           <path d="M6 15h20a10 9 0 0 1-20 0z" fill="#fff" />
@@ -27,8 +27,8 @@ export function Logo({ className = '' }: { className?: string }) {
         </svg>
       </span>
       <span className="leading-none">
-        <span className="block text-[10px] font-bold tracking-widest text-leaf-700">BABY FOOD ZUKAN</span>
-        <span className="block text-lg font-bold text-ink md:text-xl">ベビーフード<span className="text-brand-500">ずかん</span></span>
+        <span className="block text-[10px] font-bold tracking-widest text-leaf-700">RINYUSHOKU ZUKAN</span>
+        <span className="block text-lg font-bold text-ink md:text-xl">離乳食<span className="text-brand-500">ずかん</span></span>
       </span>
     </Link>
   )
