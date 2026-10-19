@@ -135,7 +135,7 @@ export default function Home() {
         </ul>
       </Section>
 
-      <Section id="featured" en="PICK UP" title="注目のベビーフード" className="bg-gradient-to-b from-brand-50/70 to-cream-50">
+      <Section id="featured" en="PICK UP" title="注目のベビーフードブランド" className="bg-gradient-to-b from-brand-50/70 to-cream-50">
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
           {prProducts.map((p) => (
             <li key={p.id}>
