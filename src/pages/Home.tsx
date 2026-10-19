@@ -4,7 +4,7 @@ import SearchForm from '../components/SearchForm'
 import Section from '../components/Section'
 import { IngredientIllust } from '../components/Illustrations'
 import { PRNote, ProductCard } from '../components/ProductParts'
-import { AGES, FEATURED_MAKER_IDS, INGREDIENTS, MAKERS, TYPES, type TypeId } from '../data/master'
+import { AGES, INGREDIENTS, TYPES, type TypeId } from '../data/master'
 import { PRODUCTS } from '../data/products'
 import { ARTICLES } from '../data/articles'
 import { sortProducts } from '../lib/search'
@@ -169,29 +169,6 @@ export default function Home() {
           ))}
         </ol>
         {popularProducts.some((p) => p.isPR) && <PRNote className="mt-4" />}
-      </Section>
-
-      <Section id="makers" en="BY MAKER" title="メーカーから探す">
-        <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-          {FEATURED_MAKER_IDS.map((id) => {
-            const m = MAKERS.find((x) => x.id === id)!
-            return (
-              <li key={m.id}>
-                <Link
-                  to={`/search?maker=${m.id}`}
-                  className="flex min-h-[60px] items-center justify-between gap-2 rounded-2xl border border-cream-200 bg-white px-4 py-3 text-sm font-bold shadow-card hover:border-brand-200 hover:text-brand-600 md:text-base"
-                >
-                  <span className="flex items-center gap-2">
-                    <Store className="h-4 w-4 shrink-0 text-leaf-500" aria-hidden />
-                    {m.name}
-                  </span>
-                  <ChevronRight className="h-4 w-4 shrink-0 text-brand-400" aria-hidden />
-                </Link>
-              </li>
-            )
-          })}
-        </ul>
-        <p className="mt-3 text-xs text-ink-mute">※ 各メーカーの商品情報は順次掲載予定です（デモ版では掲載していません）。</p>
       </Section>
 
       <Section id="articles" en="COLUMN" title="お役立ち記事" className="bg-white">
