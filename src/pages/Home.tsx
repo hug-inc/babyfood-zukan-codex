@@ -156,7 +156,7 @@ export default function Home() {
         </ul>
       </Section>
 
-      <Section id="ranking" en="RANKING" title="人気のベビーフード" more={{ to: '/search?sort=popular', label: 'もっと見る' }} className="bg-white">
+      <Section id="ranking" en="RANKING" title="人気のベビーフードブランド" more={{ to: '/search?sort=popular', label: 'もっと見る' }} className="bg-white">
         <p className="-mt-2 mb-4 flex items-start gap-1.5 text-xs text-ink-soft md:text-sm">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-leaf-700" aria-hidden />
           過去30日間の商品詳細ページ閲覧数をもとに集計（毎日更新）
