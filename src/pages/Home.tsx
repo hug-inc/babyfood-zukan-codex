@@ -146,7 +146,7 @@ export default function Home() {
         <PRNote className="mt-4" />
       </Section>
 
-      <Section id="new" en="NEW ARRIVALS" title="新着ベビーフード" more={{ to: '/search?sort=new', label: 'もっと見る' }}>
+      <Section id="new" en="NEW ARRIVALS" title="新着のベビーフードブランド" more={{ to: '/search?sort=new', label: 'もっと見る' }}>
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
           {newProducts.map((p) => (
             <li key={p.id}>
