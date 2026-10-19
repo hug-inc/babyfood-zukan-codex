@@ -116,7 +116,7 @@ export function ForMakersPage() {
           広告掲載について
         </h2>
         <p className="mt-3 text-sm">
-          トップページ「注目のベビーフード」などのPR枠に商品を掲載できます。PR枠の商品には必ず「PR」と表示し、広告であることを明示します。
+          トップページ「注目のベビーフードブランド」などのPR枠に商品を掲載できます。PR枠の商品には必ず「PR」と表示し、広告であることを明示します。
         </p>
         <Link to="/contact" className="btn-outline mt-4 w-full md:w-auto">広告掲載のお問い合わせ</Link>
       </section>
