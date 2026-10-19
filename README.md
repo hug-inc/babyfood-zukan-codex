@@ -1,4 +1,4 @@
-# ベビーフードずかん（デモ）
+# 離乳食ずかん（デモ）
 
 React 18 + Vite 5 + TypeScript + Tailwind CSS 3 + React Router 6
 
