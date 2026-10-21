@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "760px",
+      "wideSize": "1152px"
+    },
+    "color": {
+      "palette": [
+        { "slug": "brand", "color": "#F27B1F", "name": "オレンジ" },
+        { "slug": "leaf", "color": "#4F8257", "name": "グリーン" },
+        { "slug": "cream", "color": "#FFF9EF", "name": "クリーム" },
+        { "slug": "ink", "color": "#332F29", "name": "文字色" },
+        { "slug": "white", "color": "#FFFFFF", "name": "白" }
+      ]
+    },
+    "typography": {
+      "fluid": true,
+      "fontFamilies": [
+        {
+          "fontFamily": "'Zen Maru Gothic', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif",
+          "name": "離乳食ずかん ゴシック",
+          "slug": "site-sans"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#FFF9EF",
+      "text": "#332F29"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--site-sans)",
+      "lineHeight": "1.75"
+    }
+  }
+}
