@@ -46,10 +46,10 @@ $ingredients = array(
 					<p class="finder__title"><?php echo rz_icon( 'search' ); ?>条件からさがす</p>
 					<div class="finder__fields">
 						<label><span>月齢</span><select name="age"><option value="">指定なし</option><?php foreach ( $ages as $age ) : ?><option value="<?php echo esc_attr( $age['slug'] ); ?>"><?php echo esc_html( $age['label'] ); ?></option><?php endforeach; ?></select></label>
-						<label><span>商品タイプ</span><select name="type"><option value="">指定なし</option><?php foreach ( $types as $type ) : ?><option value="<?php echo esc_attr( $type['slug'] ); ?>"><?php echo esc_html( $type['label'] ); ?></option><?php endforeach; ?></select></label>
+						<label><span>種類</span><select name="type"><option value="">指定なし</option><?php foreach ( $types as $type ) : ?><option value="<?php echo esc_attr( $type['slug'] ); ?>"><?php echo esc_html( $type['label'] ); ?></option><?php endforeach; ?></select></label>
 						<label><span>食材</span><select name="ingredient"><option value="">指定なし</option><?php foreach ( $ingredients as $ingredient ) : ?><option value="<?php echo esc_attr( $ingredient['slug'] ); ?>"><?php echo esc_html( $ingredient['label'] ); ?></option><?php endforeach; ?></select></label>
 					</div>
-					<button class="button button--primary finder__submit" type="submit"><?php echo rz_icon( 'search' ); ?>この条件で探す</button>
+					<button class="button button--primary finder__submit" type="submit"><?php echo rz_icon( 'search' ); ?>この条件でショップを探す</button>
 				</form>
 			</div>
 		</div>
@@ -57,7 +57,7 @@ $ingredients = array(
 
 	<section id="age" class="home-section" aria-labelledby="age-title">
 		<div class="site-container">
-			<?php rz_section_heading( 'BY AGE', '月齢から探す', 'お子さまの月齢に合わせた商品をチェック' ); ?>
+			<?php rz_section_heading( 'BY AGE', '月齢から探す', 'お子さまの月齢に合うショップをチェック' ); ?>
 			<ul class="age-grid">
 				<?php foreach ( $ages as $index => $age ) : ?>
 					<li<?php echo 4 === $index ? ' class="age-grid__last"' : ''; ?>><a class="age-card" href="<?php echo esc_url( add_query_arg( 'age', $age['slug'], $archive_url ) ); ?>">
