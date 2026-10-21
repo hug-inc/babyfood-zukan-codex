@@ -131,19 +131,25 @@ function rz_demo_products_by_age( $age ) {
 	return $products;
 }
 
-/** Labeled fallback shops used until editors publish real shop entries. */
-function rz_demo_shops_by_age( $age ) {
-	$shops = array(
-		'9-11' => array(
-			array( 'id' => 'shop-sample-01', 'name' => 'てづかみ日和', 'description' => '手づかみ食べを中心に紹介するオンラインショップ（サンプル）', 'categories' => '9〜11か月・手づかみ食べ', 'sample' => true, 'pr' => false ),
-			array( 'id' => 'shop-sample-02', 'name' => 'まめまるストア', 'description' => '月齢別に選べる離乳食ショップ（サンプル）', 'categories' => '9〜11か月・12〜18か月', 'sample' => true, 'pr' => true ),
-		),
-		'12-18' => array(
-			array( 'id' => 'shop-sample-02', 'name' => 'まめまるストア', 'description' => '月齢別に選べる離乳食ショップ（サンプル）', 'categories' => '9〜11か月・12〜18か月', 'sample' => true, 'pr' => true ),
-			array( 'id' => 'shop-sample-03', 'name' => 'もぐもぐセレクト', 'description' => '幼児食への移行期を応援するショップ（サンプル）', 'categories' => '12〜18か月・1歳半〜', 'sample' => true, 'pr' => false ),
+/** Initial featured shop used until editors publish shop entries. */
+function rz_featured_shops_by_age( $age ) {
+	if ( ! in_array( $age, array( '9-11', '12-18' ), true ) ) {
+		return array();
+	}
+
+	return array(
+		array(
+			'id'          => 'shop-tedemogu',
+			'name'        => 'TEDEMOGU（てでもぐ）',
+			'description' => '手づかみ食べの冷凍離乳食・BLWの公式通販ショップ',
+			'categories'  => '9〜11か月・12〜18か月・冷凍離乳食・手づかみ食べ',
+			'url'         => 'https://shop.eatbyhand.co.jp/',
+			'image'       => 'https://shop.eatbyhand.co.jp/cdn/shop/t/55/assets/mv.png?v=38514592127995164781792120120',
+			'alt'         => '手づかみ離乳食を食べる赤ちゃんとTEDEMOGUのファーストビュー',
+			'sample'      => false,
+			'pr'          => false,
 		),
 	);
-	return isset( $shops[ $age ] ) ? $shops[ $age ] : array();
 }
 
 /** Fetch published shops assigned to the selected WordPress categories. */
