@@ -66,7 +66,7 @@ function rz_icon( $name, $class = '' ) {
 /** Default navigation mirrors the approved prototype when no WP menu exists. */
 function rz_default_menu( $args = array() ) {
 	$links = array(
-		array( get_post_type_archive_link( 'rz_product' ) ?: home_url( '/products/' ), '商品をさがす' ),
+		array( get_post_type_archive_link( 'rz_product' ) ?: home_url( '/products/' ), 'ショップをさがす' ),
 		array( home_url( '/#age' ), '月齢から探す' ),
 		array( home_url( '/#type' ), '種類から探す' ),
 		array( home_url( '/#ingredient' ), '食材から探す' ),
@@ -129,6 +129,102 @@ function rz_demo_products_by_age( $age ) {
 		}
 	}
 	return $products;
+}
+
+/** Labeled fallback shops used until editors publish real shop entries. */
+function rz_demo_shops_by_age( $age ) {
+	$shops = array(
+		'9-11' => array(
+			array( 'id' => 'shop-sample-01', 'name' => 'てづかみ日和', 'description' => '手づかみ食べを中心に紹介するオンラインショップ（サンプル）', 'categories' => '9〜11か月・手づかみ食べ', 'sample' => true, 'pr' => false ),
+			array( 'id' => 'shop-sample-02', 'name' => 'まめまるストア', 'description' => '月齢別に選べる離乳食ショップ（サンプル）', 'categories' => '9〜11か月・12〜18か月', 'sample' => true, 'pr' => true ),
+		),
+		'12-18' => array(
+			array( 'id' => 'shop-sample-02', 'name' => 'まめまるストア', 'description' => '月齢別に選べる離乳食ショップ（サンプル）', 'categories' => '9〜11か月・12〜18か月', 'sample' => true, 'pr' => true ),
+			array( 'id' => 'shop-sample-03', 'name' => 'もぐもぐセレクト', 'description' => '幼児食への移行期を応援するショップ（サンプル）', 'categories' => '12〜18か月・1歳半〜', 'sample' => true, 'pr' => false ),
+		),
+	);
+	return isset( $shops[ $age ] ) ? $shops[ $age ] : array();
+}
+
+/** Fetch published shops assigned to the selected WordPress categories. */
+function rz_get_shop_cards( $filters = array() ) {
+	$tax_map   = array( 'age' => 'rz_age', 'type' => 'rz_food_type', 'ingredient' => 'rz_ingredient' );
+	$tax_query = array( 'relation' => 'AND' );
+	foreach ( $tax_map as $param => $taxonomy ) {
+		if ( ! empty( $filters[ $param ] ) ) {
+			$tax_query[] = array(
+				'taxonomy' => $taxonomy,
+				'field'    => 'slug',
+				'terms'    => sanitize_title( $filters[ $param ] ),
+			);
+		}
+	}
+	$args = array(
+		'post_type'      => 'rz_shop',
+		'post_status'    => 'publish',
+		'posts_per_page' => 24,
+		'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
+		'no_found_rows'  => true,
+	);
+	if ( count( $tax_query ) > 1 ) {
+		$args['tax_query'] = $tax_query;
+	}
+	$query = new WP_Query( $args );
+	$items = array();
+	foreach ( $query->posts as $post ) {
+		$category_names = array();
+		foreach ( array( 'rz_age', 'rz_food_type', 'rz_ingredient' ) as $taxonomy ) {
+			$terms = get_the_terms( $post, $taxonomy );
+			if ( $terms && ! is_wp_error( $terms ) ) {
+				$category_names = array_merge( $category_names, wp_list_pluck( $terms, 'name' ) );
+			}
+		}
+		$items[] = array(
+			'id'          => (string) $post->ID,
+			'name'        => get_the_title( $post ),
+			'description' => get_the_excerpt( $post ),
+			'categories'  => implode( '・', array_unique( $category_names ) ),
+			'url'         => get_post_meta( $post->ID, '_rz_shop_url', true ),
+			'image'       => get_the_post_thumbnail_url( $post, 'medium_large' ),
+			'alt'         => get_post_meta( get_post_thumbnail_id( $post ), '_wp_attachment_image_alt', true ),
+			'pr'          => '1' === get_post_meta( $post->ID, '_rz_shop_is_pr', true ),
+			'sample'      => '1' === get_post_meta( $post->ID, '_rz_shop_is_sample', true ),
+		);
+	}
+	wp_reset_postdata();
+	return $items;
+}
+
+/** Whether editors have published at least one real shop entry. */
+function rz_has_published_shops() {
+	$counts = wp_count_posts( 'rz_shop' );
+	return $counts && ! empty( $counts->publish );
+}
+
+/** Output a shop card for the category result pages. */
+function rz_shop_card( $shop ) {
+	$image   = ! empty( $shop['image'] ) ? $shop['image'] : '';
+	$url     = ! empty( $shop['url'] ) ? $shop['url'] : '';
+	$is_pr   = ! empty( $shop['pr'] );
+	$is_demo = ! empty( $shop['sample'] );
+	$tag     = $url ? 'a' : 'div';
+	?>
+	<article class="product-card shop-card<?php echo $is_pr ? ' product-card--pr' : ''; ?>" aria-label="<?php echo esc_attr( $is_pr ? 'PRショップ：' . $shop['name'] : $shop['name'] ); ?>">
+		<<?php echo esc_html( $tag ); ?> class="product-card__link"<?php if ( $url ) : ?> href="<?php echo esc_url( $url ); ?>" target="_blank" rel="<?php echo $is_pr ? 'sponsored noopener' : 'noopener'; ?>"<?php endif; ?>>
+			<div class="product-card__visual product-card__visual--vegetable">
+				<?php if ( $image ) : ?><img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( ! empty( $shop['alt'] ) ? $shop['alt'] : $shop['name'] . 'のショップ画像' ); ?>" loading="lazy" width="640" height="512"><?php else : ?><span class="shop-illustration" aria-hidden="true"><?php echo rz_icon( 'store' ); ?></span><?php endif; ?>
+				<div class="product-card__badges"><?php if ( $is_pr ) : ?><span class="badge badge--pr" aria-label="広告（PR）">PR</span><?php endif; ?><?php if ( $is_demo ) : ?><span class="badge badge--sample">サンプル</span><?php endif; ?></div>
+			</div>
+			<div class="product-card__body">
+				<p class="product-card__brand">オンラインショップ</p>
+				<h3><?php echo esc_html( $shop['name'] ); ?></h3>
+				<?php if ( ! empty( $shop['description'] ) ) : ?><p class="shop-card__description"><?php echo esc_html( $shop['description'] ); ?></p><?php endif; ?>
+				<?php if ( ! empty( $shop['categories'] ) ) : ?><p class="product-card__age"><span>掲載カテゴリー</span><?php echo esc_html( $shop['categories'] ); ?></p><?php endif; ?>
+				<strong class="shop-card__cta"><?php echo $url ? 'ショップを見る（外部サイト）' : '公開準備中'; ?><?php if ( $url ) : ?><?php echo rz_icon( 'arrow' ); ?><?php endif; ?></strong>
+			</div>
+		</<?php echo esc_html( $tag ); ?>>
+	</article>
+	<?php
 }
 
 /** Fetch product cards from WordPress and use labeled demo data while empty. */
