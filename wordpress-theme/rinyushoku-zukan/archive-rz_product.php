@@ -8,6 +8,9 @@ $tax_filters = array(
 	'brand'      => array( 'label' => 'ブランド', 'taxonomy' => 'rz_brand' ),
 	'storage'    => array( 'label' => '保存方法', 'taxonomy' => 'rz_storage' ),
 );
+$requested_age = isset( $_GET['age'] ) ? sanitize_title( wp_unslash( $_GET['age'] ) ) : '';
+$demo_products = have_posts() ? array() : rz_demo_products_by_age( $requested_age );
+$result_count  = $demo_products ? count( $demo_products ) : $GLOBALS['wp_query']->found_posts;
 ?>
 <main id="main-content" class="content-page product-archive"><div class="site-container">
 	<header class="page-heading"><p>SEARCH</p><h1>ベビーフードを探す</h1><span>月齢や食材などの条件から比較できます。</span></header>
@@ -24,8 +27,8 @@ $tax_filters = array(
 			</form>
 		</aside>
 		<section class="archive-results" aria-labelledby="results-title">
-			<div class="archive-results__heading"><h2 id="results-title"><?php echo esc_html( $GLOBALS['wp_query']->found_posts ); ?>件の商品</h2></div>
-			<?php if ( have_posts() ) : ?><ul class="product-grid"><?php while ( have_posts() ) : the_post(); $brands = get_the_terms( get_the_ID(), 'rz_brand' ); $ages = get_the_terms( get_the_ID(), 'rz_age' ); $item = array( 'id' => (string) get_the_ID(), 'name' => get_the_title(), 'brand' => $brands && ! is_wp_error( $brands ) ? $brands[0]->name : '', 'age' => $ages && ! is_wp_error( $ages ) ? implode( '・', wp_list_pluck( $ages, 'name' ) ) : '公式サイトでご確認ください', 'url' => get_permalink(), 'image' => get_the_post_thumbnail_url( get_the_ID(), 'medium_large' ), 'pr' => '1' === get_post_meta( get_the_ID(), '_rz_is_pr', true ), 'sample' => '1' === get_post_meta( get_the_ID(), '_rz_is_sample', true ) ); ?><li><?php rz_product_card( $item ); ?></li><?php endwhile; ?></ul><?php the_posts_pagination(); ?><?php else : ?><div class="empty-state"><h2>条件に合う商品がありません</h2><p>条件を減らして、もう一度お試しください。</p></div><?php endif; ?>
+			<div class="archive-results__heading"><h2 id="results-title"><?php echo esc_html( $result_count ); ?>件の商品<?php echo $demo_products ? '（サンプル）' : ''; ?></h2></div>
+			<?php if ( have_posts() ) : ?><ul class="product-grid"><?php while ( have_posts() ) : the_post(); $brands = get_the_terms( get_the_ID(), 'rz_brand' ); $ages = get_the_terms( get_the_ID(), 'rz_age' ); $item = array( 'id' => (string) get_the_ID(), 'name' => get_the_title(), 'brand' => $brands && ! is_wp_error( $brands ) ? $brands[0]->name : '', 'age' => $ages && ! is_wp_error( $ages ) ? implode( '・', wp_list_pluck( $ages, 'name' ) ) : '公式サイトでご確認ください', 'url' => get_permalink(), 'image' => get_the_post_thumbnail_url( get_the_ID(), 'medium_large' ), 'pr' => '1' === get_post_meta( get_the_ID(), '_rz_is_pr', true ), 'sample' => '1' === get_post_meta( get_the_ID(), '_rz_is_sample', true ) ); ?><li><?php rz_product_card( $item ); ?></li><?php endwhile; ?></ul><?php the_posts_pagination(); ?><?php elseif ( $demo_products ) : ?><p class="demo-results-note">この一覧は表示確認用のサンプル（デモデータ）です。</p><ul class="product-grid"><?php foreach ( $demo_products as $item ) : ?><li><?php rz_product_card( $item ); ?></li><?php endforeach; ?></ul><?php else : ?><div class="empty-state"><h2>条件に合う商品がありません</h2><p>条件を減らして、もう一度お試しください。</p></div><?php endif; ?>
 		</section>
 	</div>
 </div></main>

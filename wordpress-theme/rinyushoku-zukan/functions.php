@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'RZ_THEME_VERSION', '1.0.0' );
+define( 'RZ_THEME_VERSION', '1.0.1' );
 define( 'RZ_THEME_DIR', get_template_directory() );
 define( 'RZ_THEME_URI', get_template_directory_uri() );
 

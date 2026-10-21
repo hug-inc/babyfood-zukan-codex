@@ -105,6 +105,32 @@ function rz_demo_products( $section ) {
 	return isset( $sets[ $section ] ) ? $sets[ $section ] : array();
 }
 
+/** Return labeled sample products for the two launch age landing pages. */
+function rz_demo_products_by_age( $age ) {
+	$age_product_ids = array(
+		'9-11'  => array( 'sample-04', 'sample-03', 'sample-10', 'sample-12' ),
+		'12-18' => array( 'sample-08', 'sample-03', 'sample-10', 'sample-06' ),
+	);
+	if ( ! isset( $age_product_ids[ $age ] ) ) {
+		return array();
+	}
+
+	$products_by_id = array();
+	foreach ( array( 'featured', 'new', 'popular' ) as $section ) {
+		foreach ( rz_demo_products( $section ) as $product ) {
+			$products_by_id[ $product['id'] ] = $product;
+		}
+	}
+
+	$products = array();
+	foreach ( $age_product_ids[ $age ] as $product_id ) {
+		if ( isset( $products_by_id[ $product_id ] ) ) {
+			$products[] = $products_by_id[ $product_id ];
+		}
+	}
+	return $products;
+}
+
 /** Fetch product cards from WordPress and use labeled demo data while empty. */
 function rz_get_product_cards( $section, $limit = 4 ) {
 	$args = array(
