@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** Register the future-facing product database. */
+/** Register the future-facing product and shop databases. */
 function rz_register_content_types() {
 	register_post_type(
 		'rz_product',
@@ -34,21 +34,40 @@ function rz_register_content_types() {
 		)
 	);
 
+	register_post_type(
+		'rz_shop',
+		array(
+			'labels' => array(
+				'name'          => 'ショップ',
+				'singular_name' => 'ショップ',
+				'add_new_item'  => 'ショップを追加',
+				'edit_item'     => 'ショップを編集',
+				'view_item'     => 'ショップを表示',
+				'search_items'  => 'ショップを検索',
+			),
+			'public'       => true,
+			'show_in_rest' => true,
+			'menu_icon'    => 'dashicons-store',
+			'has_archive'  => false,
+			'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'page-attributes' ),
+		)
+	);
+
 	$taxonomies = array(
-		'rz_age'        => array( 'name' => '対象月齢', 'slug' => 'age' ),
-		'rz_food_type'  => array( 'name' => '商品タイプ', 'slug' => 'food-type' ),
-		'rz_ingredient' => array( 'name' => '食材', 'slug' => 'ingredient' ),
-		'rz_storage'    => array( 'name' => '保存方法', 'slug' => 'storage' ),
-		'rz_brand'      => array( 'name' => 'ブランド', 'slug' => 'brand' ),
+		'rz_age'        => array( 'name' => '対象月齢', 'slug' => 'age', 'objects' => array( 'rz_product', 'rz_shop' ), 'hierarchical' => true ),
+		'rz_food_type'  => array( 'name' => '種類', 'slug' => 'food-type', 'objects' => array( 'rz_product', 'rz_shop' ), 'hierarchical' => true ),
+		'rz_ingredient' => array( 'name' => '食材', 'slug' => 'ingredient', 'objects' => array( 'rz_product', 'rz_shop' ), 'hierarchical' => true ),
+		'rz_storage'    => array( 'name' => '保存方法', 'slug' => 'storage', 'objects' => array( 'rz_product' ), 'hierarchical' => false ),
+		'rz_brand'      => array( 'name' => 'ブランド', 'slug' => 'brand', 'objects' => array( 'rz_product' ), 'hierarchical' => false ),
 	);
 	foreach ( $taxonomies as $taxonomy => $config ) {
 		register_taxonomy(
 			$taxonomy,
-			array( 'rz_product' ),
+			$config['objects'],
 			array(
 				'label'             => $config['name'],
 				'public'            => true,
-				'hierarchical'      => false,
+				'hierarchical'      => $config['hierarchical'],
 				'show_admin_column' => true,
 				'show_in_rest'      => true,
 				'rewrite'           => array( 'slug' => $config['slug'] ),
@@ -81,8 +100,87 @@ function rz_register_content_types() {
 			)
 		);
 	}
+
+	$shop_meta_fields = array(
+		'_rz_shop_url'       => 'string',
+		'_rz_shop_is_pr'     => 'boolean',
+		'_rz_shop_is_sample' => 'boolean',
+	);
+	foreach ( $shop_meta_fields as $key => $type ) {
+		register_post_meta(
+			'rz_shop',
+			$key,
+			array(
+				'type'              => $type,
+				'single'            => true,
+				'show_in_rest'      => true,
+				'sanitize_callback' => 'boolean' === $type ? 'rest_sanitize_boolean' : 'esc_url_raw',
+				'auth_callback'     => function() {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
+	}
 }
 add_action( 'init', 'rz_register_content_types' );
+
+/** Ensure the category checklists have the standard choices from day one. */
+function rz_ensure_default_shop_terms() {
+	$term_sets = array(
+		'rz_age' => array(
+			'5-6' => '5〜6か月', '7-8' => '7〜8か月', '9-11' => '9〜11か月', '12-18' => '12〜18か月', '18plus' => '1歳半〜',
+		),
+		'rz_food_type' => array(
+			'retort' => 'レトルト・パウチ', 'frozen' => '冷凍離乳食', 'tezukami' => '手づかみ食べ', 'freezedry' => 'フリーズドライ', 'snack' => 'おやつ',
+		),
+		'rz_ingredient' => array(
+			'rice' => '米', 'vegetable' => '野菜', 'fish' => '魚', 'meat' => '肉', 'beans' => '豆類', 'fruit' => '果物',
+		),
+	);
+	foreach ( $term_sets as $taxonomy => $terms ) {
+		foreach ( $terms as $slug => $name ) {
+			if ( ! term_exists( $slug, $taxonomy ) ) {
+				wp_insert_term( $name, $taxonomy, array( 'slug' => $slug ) );
+			}
+		}
+	}
+}
+add_action( 'init', 'rz_ensure_default_shop_terms', 20 );
+
+/** Add the small shop settings box; categories use WordPress checklists. */
+function rz_add_shop_meta_box() {
+	add_meta_box( 'rz-shop-details', 'ショップ情報', 'rz_shop_meta_box', 'rz_shop', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'rz_add_shop_meta_box' );
+
+/** Render shop fields. */
+function rz_shop_meta_box( $post ) {
+	wp_nonce_field( 'rz_save_shop', 'rz_shop_nonce' );
+	?>
+	<div style="display:grid;gap:14px">
+		<label><strong style="display:block;margin-bottom:4px">ショップURL</strong><input style="width:100%" type="url" name="_rz_shop_url" value="<?php echo esc_attr( get_post_meta( $post->ID, '_rz_shop_url', true ) ); ?>" placeholder="https://example.com/"></label>
+		<label><input type="checkbox" name="_rz_shop_is_pr" value="1" <?php checked( get_post_meta( $post->ID, '_rz_shop_is_pr', true ), '1' ); ?>> PR掲載</label>
+		<label><input type="checkbox" name="_rz_shop_is_sample" value="1" <?php checked( get_post_meta( $post->ID, '_rz_shop_is_sample', true ), '1' ); ?>> サンプル／デモデータ</label>
+		<p style="margin:0;color:#646970">右側の「対象月齢」「種類」「食材」で、このショップを表示するカテゴリーにチェックを入れてください。複数選択できます。</p>
+	</div>
+	<?php
+}
+
+/** Save shop fields. */
+function rz_save_shop_meta( $post_id ) {
+	if ( ! isset( $_POST['rz_shop_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rz_shop_nonce'] ) ), 'rz_save_shop' ) ) {
+		return;
+	}
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	$url = isset( $_POST['_rz_shop_url'] ) ? esc_url_raw( wp_unslash( $_POST['_rz_shop_url'] ) ) : '';
+	update_post_meta( $post_id, '_rz_shop_url', $url );
+	foreach ( array( '_rz_shop_is_pr', '_rz_shop_is_sample' ) as $key ) {
+		update_post_meta( $post_id, $key, isset( $_POST[ $key ] ) ? '1' : '0' );
+	}
+}
+add_action( 'save_post_rz_shop', 'rz_save_shop_meta' );
 
 /** Add a compact product-details metabox. */
 function rz_add_product_meta_box() {
