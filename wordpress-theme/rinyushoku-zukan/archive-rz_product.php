@@ -10,9 +10,9 @@ $filters = array();
 foreach ( array_keys( $tax_filters ) as $param ) {
 	$filters[ $param ] = isset( $_GET[ $param ] ) ? sanitize_title( wp_unslash( $_GET[ $param ] ) ) : '';
 }
-$shops       = rz_get_shop_cards( $filters );
-$demo_shops  = ( ! $shops && ! rz_has_published_shops() ) ? rz_demo_shops_by_age( $filters['age'] ) : array();
-$shown_shops = $shops ? $shops : $demo_shops;
+$shops          = rz_get_shop_cards( $filters );
+$featured_shops = ( ! $shops && ! rz_has_published_shops() ) ? rz_featured_shops_by_age( $filters['age'] ) : array();
+$shown_shops    = $shops ? $shops : $featured_shops;
 ?>
 <main id="main-content" class="content-page product-archive"><div class="site-container">
 	<header class="page-heading"><p>SHOP SEARCH</p><h1>離乳食ショップを探す</h1><span>月齢・種類・食材に合うショップを見つけられます。</span></header>
@@ -27,11 +27,9 @@ $shown_shops = $shops ? $shops : $demo_shops;
 			</form>
 		</aside>
 		<section class="archive-results" aria-labelledby="results-title">
-			<div class="archive-results__heading"><h2 id="results-title"><?php echo esc_html( count( $shown_shops ) ); ?>件のショップ<?php echo $demo_shops ? '（サンプル）' : ''; ?></h2></div>
-			<?php if ( $demo_shops ) : ?><p class="demo-results-note">この一覧は表示確認用のショップサンプル（デモデータ）です。管理画面で公開したショップが優先して表示されます。</p><?php endif; ?>
+			<div class="archive-results__heading"><h2 id="results-title"><?php echo esc_html( count( $shown_shops ) ); ?>件のショップ</h2></div>
 			<?php if ( $shown_shops ) : ?>
 				<ul class="product-grid shop-grid"><?php foreach ( $shown_shops as $shop ) : ?><li><?php rz_shop_card( $shop ); ?></li><?php endforeach; ?></ul>
-				<?php if ( array_filter( wp_list_pluck( $shown_shops, 'pr' ) ) ) : ?><p class="pr-note"><span class="badge badge--pr">PR</span>「PR」表示のあるショップは、広告掲載料をいただいて掲載しています。</p><?php endif; ?>
 			<?php else : ?>
 				<div class="empty-state"><h2>条件に合うショップがありません</h2><p>条件を減らして、もう一度お試しください。</p></div>
 			<?php endif; ?>
