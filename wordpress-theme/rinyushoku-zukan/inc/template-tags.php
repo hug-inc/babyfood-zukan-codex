@@ -155,7 +155,7 @@ function rz_featured_shops_for_filters( $filters ) {
 	$allowed_filters = array(
 		'age'        => array( '9-11', '12-18' ),
 		'type'       => array( 'frozen', 'tezukami' ),
-		'ingredient' => array(),
+		'ingredient' => array( 'rice', 'vegetable', 'fish', 'meat' ),
 	);
 	$has_filter = false;
 	foreach ( $allowed_filters as $param => $allowed_values ) {
@@ -177,7 +177,7 @@ function rz_featured_shops_for_filters( $filters ) {
 			'id'          => 'shop-tedemogu',
 			'name'        => 'TEDEMOGU（てでもぐ）',
 			'description' => '手づかみ食べの冷凍離乳食・BLWの公式通販ショップ',
-			'categories'  => '9〜11か月・12〜18か月・冷凍離乳食・手づかみ食べ',
+			'categories'  => '9〜11か月・12〜18か月・冷凍離乳食・手づかみ食べ・米・野菜・魚・肉',
 			'url'         => 'https://shop.eatbyhand.co.jp/',
 			'image'       => 'https://shop.eatbyhand.co.jp/cdn/shop/t/55/assets/mv.png?v=38514592127995164781792120120',
 			'alt'         => '手づかみ離乳食を食べる赤ちゃんとTEDEMOGUのファーストビュー',
