@@ -103,8 +103,10 @@ function rz_register_content_types() {
 
 	$shop_meta_fields = array(
 		'_rz_shop_url'       => 'string',
+		'_rz_shop_is_featured' => 'boolean',
 		'_rz_shop_is_pr'     => 'boolean',
 		'_rz_shop_is_sample' => 'boolean',
+		'_rz_shop_clicks'    => 'integer',
 	);
 	foreach ( $shop_meta_fields as $key => $type ) {
 		register_post_meta(
@@ -114,7 +116,7 @@ function rz_register_content_types() {
 				'type'              => $type,
 				'single'            => true,
 				'show_in_rest'      => true,
-				'sanitize_callback' => 'boolean' === $type ? 'rest_sanitize_boolean' : 'esc_url_raw',
+				'sanitize_callback' => 'integer' === $type ? 'absint' : ( 'boolean' === $type ? 'rest_sanitize_boolean' : 'esc_url_raw' ),
 				'auth_callback'     => function() {
 					return current_user_can( 'edit_posts' );
 				},
@@ -159,8 +161,11 @@ function rz_shop_meta_box( $post ) {
 	?>
 	<div style="display:grid;gap:14px">
 		<label><strong style="display:block;margin-bottom:4px">ショップURL</strong><input style="width:100%" type="url" name="_rz_shop_url" value="<?php echo esc_attr( get_post_meta( $post->ID, '_rz_shop_url', true ) ); ?>" placeholder="https://example.com/"></label>
+		<label><input type="checkbox" name="_rz_shop_is_featured" value="1" <?php checked( get_post_meta( $post->ID, '_rz_shop_is_featured', true ), '1' ); ?>> 「注目のベビーフードブランド」に表示</label>
 		<label><input type="checkbox" name="_rz_shop_is_pr" value="1" <?php checked( get_post_meta( $post->ID, '_rz_shop_is_pr', true ), '1' ); ?>> PR掲載</label>
 		<label><input type="checkbox" name="_rz_shop_is_sample" value="1" <?php checked( get_post_meta( $post->ID, '_rz_shop_is_sample', true ), '1' ); ?>> サンプル／デモデータ</label>
+		<p style="margin:0"><strong>公式ショップへのクリック数：</strong><?php echo esc_html( number_format_i18n( (int) get_post_meta( $post->ID, '_rz_shop_clicks', true ) ) ); ?>回</p>
+		<p style="margin:0;color:#646970">「新着」は公開日の新しい順、「人気」は公式ショップへのクリック数が多い順に自動表示されます。</p>
 		<p style="margin:0;color:#646970">右側の「対象月齢」「種類」「食材」で、このショップを表示するカテゴリーにチェックを入れてください。複数選択できます。</p>
 	</div>
 	<?php
@@ -176,11 +181,98 @@ function rz_save_shop_meta( $post_id ) {
 	}
 	$url = isset( $_POST['_rz_shop_url'] ) ? esc_url_raw( wp_unslash( $_POST['_rz_shop_url'] ) ) : '';
 	update_post_meta( $post_id, '_rz_shop_url', $url );
-	foreach ( array( '_rz_shop_is_pr', '_rz_shop_is_sample' ) as $key ) {
+	foreach ( array( '_rz_shop_is_featured', '_rz_shop_is_pr', '_rz_shop_is_sample' ) as $key ) {
 		update_post_meta( $post_id, $key, isset( $_POST[ $key ] ) ? '1' : '0' );
+	}
+	if ( '' === get_post_meta( $post_id, '_rz_shop_clicks', true ) ) {
+		update_post_meta( $post_id, '_rz_shop_clicks', 0 );
 	}
 }
 add_action( 'save_post_rz_shop', 'rz_save_shop_meta' );
+
+/** Count an outbound shop visit once per browser and shop each day, then redirect. */
+function rz_track_shop_click() {
+	if ( ! isset( $_GET['rz_shop_out'] ) ) {
+		return;
+	}
+	$shop_id = absint( wp_unslash( $_GET['rz_shop_out'] ) );
+	if ( ! $shop_id || 'rz_shop' !== get_post_type( $shop_id ) || 'publish' !== get_post_status( $shop_id ) ) {
+		wp_safe_redirect( home_url( '/' ) );
+		exit;
+	}
+	$target = esc_url_raw( get_post_meta( $shop_id, '_rz_shop_url', true ) );
+	if ( ! $target ) {
+		wp_safe_redirect( home_url( '/' ) );
+		exit;
+	}
+
+	$cookie_name = 'rz_shop_clicks_today';
+	$today       = gmdate( 'Ymd' );
+	$cookie      = isset( $_COOKIE[ $cookie_name ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_name ] ) ) : '';
+	$parts       = explode( ':', $cookie, 2 );
+	$clicked     = isset( $parts[0], $parts[1] ) && $today === $parts[0] ? array_filter( array_map( 'absint', explode( ',', $parts[1] ) ) ) : array();
+	if ( ! in_array( $shop_id, $clicked, true ) ) {
+		update_post_meta( $shop_id, '_rz_shop_clicks', (int) get_post_meta( $shop_id, '_rz_shop_clicks', true ) + 1 );
+		$clicked[] = $shop_id;
+		setcookie(
+			$cookie_name,
+			$today . ':' . implode( ',', array_slice( array_unique( $clicked ), -50 ) ),
+			array(
+				'expires'  => time() + DAY_IN_SECONDS,
+				'path'     => COOKIEPATH ? COOKIEPATH : '/',
+				'domain'   => COOKIE_DOMAIN,
+				'secure'   => is_ssl(),
+				'httponly' => true,
+				'samesite' => 'Lax',
+			)
+		);
+	}
+
+	$target_host = wp_parse_url( $target, PHP_URL_HOST );
+	add_filter(
+		'allowed_redirect_hosts',
+		function( $hosts ) use ( $target_host ) {
+			if ( $target_host ) {
+				$hosts[] = $target_host;
+			}
+			return array_unique( $hosts );
+		}
+	);
+	wp_safe_redirect( $target, 302, 'Rinyushoku Zukan' );
+	exit;
+}
+add_action( 'template_redirect', 'rz_track_shop_click', 1 );
+
+/** Show click totals in the shop list for quick editorial checks. */
+function rz_shop_admin_columns( $columns ) {
+	$columns['rz_shop_clicks'] = 'ショップクリック数';
+	return $columns;
+}
+add_filter( 'manage_rz_shop_posts_columns', 'rz_shop_admin_columns' );
+
+/** Render the shop click total column. */
+function rz_shop_admin_column_value( $column, $post_id ) {
+	if ( 'rz_shop_clicks' === $column ) {
+		echo esc_html( number_format_i18n( (int) get_post_meta( $post_id, '_rz_shop_clicks', true ) ) );
+	}
+}
+add_action( 'manage_rz_shop_posts_custom_column', 'rz_shop_admin_column_value', 10, 2 );
+
+/** Make the click total sortable in the shop list. */
+function rz_shop_sortable_columns( $columns ) {
+	$columns['rz_shop_clicks'] = 'rz_shop_clicks';
+	return $columns;
+}
+add_filter( 'manage_edit-rz_shop_sortable_columns', 'rz_shop_sortable_columns' );
+
+/** Apply numeric sorting when editors select the click column. */
+function rz_sort_shop_admin_by_clicks( $query ) {
+	if ( is_admin() && $query->is_main_query() && 'rz_shop' === $query->get( 'post_type' ) && 'rz_shop_clicks' === $query->get( 'orderby' ) ) {
+		$query->set( 'meta_key', '_rz_shop_clicks' );
+		$query->set( 'orderby', 'meta_value_num' );
+	}
+}
+add_action( 'pre_get_posts', 'rz_sort_shop_admin_by_clicks' );
 
 /** Add a compact product-details metabox. */
 function rz_add_product_meta_box() {
