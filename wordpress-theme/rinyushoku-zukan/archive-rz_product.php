@@ -11,7 +11,7 @@ foreach ( array_keys( $tax_filters ) as $param ) {
 	$filters[ $param ] = isset( $_GET[ $param ] ) ? sanitize_title( wp_unslash( $_GET[ $param ] ) ) : '';
 }
 $shops          = rz_get_shop_cards( $filters );
-$featured_shops = ( ! $shops && ! rz_has_published_shops() ) ? rz_featured_shops_by_age( $filters['age'] ) : array();
+$featured_shops = ( ! $shops && ! rz_has_published_shops() ) ? rz_featured_shops_for_filters( $filters ) : array();
 $shown_shops    = $shops ? $shops : $featured_shops;
 ?>
 <main id="main-content" class="content-page product-archive"><div class="site-container">
