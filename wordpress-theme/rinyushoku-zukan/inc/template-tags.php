@@ -103,7 +103,7 @@ function rz_default_menu( $args = array() ) {
 function rz_demo_products( $section ) {
 	$sets = array(
 		'featured' => array(
-			array( 'id' => 'tedemogu', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'pr' => false, 'sample' => false, 'type' => 'vegetable' ),
+			array( 'id' => 'tedemogu', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'url' => 'https://shop.eatbyhand.co.jp/', 'external' => true, 'pr' => false, 'sample' => false, 'type' => 'vegetable' ),
 		),
 		'new' => array(
 			array( 'id' => 'sample-10', 'name' => 'きなこと米粉のスティック', 'brand' => 'まめまる工房（サンプル）', 'age' => '9〜18か月', 'sample' => true, 'type' => 'beans' ),
@@ -316,9 +316,10 @@ function rz_product_card( $item, $rank = 0, $show_compare = true, $show_pr = tru
 	$type     = ! empty( $item['type'] ) ? $item['type'] : 'vegetable';
 	$is_pr    = $show_pr && ! empty( $item['pr'] );
 	$is_demo  = ! empty( $item['sample'] );
+	$external = ! empty( $item['external'] );
 	?>
 	<article class="product-card<?php echo $is_pr ? ' product-card--pr' : ''; ?>" aria-label="<?php echo esc_attr( $is_pr ? 'PR商品：' . $item['name'] : $item['name'] ); ?>">
-		<a class="product-card__link" href="<?php echo esc_url( $url ?: '#' ); ?>">
+		<a class="product-card__link" href="<?php echo esc_url( $url ?: '#' ); ?>"<?php echo $external ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
 			<div class="product-card__visual product-card__visual--<?php echo esc_attr( $type ); ?>">
 				<?php if ( $image ) : ?>
 					<img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( ! empty( $item['alt'] ) ? $item['alt'] : $item['name'] ); ?>" loading="lazy" width="640" height="512">
@@ -335,6 +336,7 @@ function rz_product_card( $item, $rank = 0, $show_compare = true, $show_pr = tru
 				<p class="product-card__brand"><?php echo esc_html( $item['brand'] ); ?></p>
 				<h3><?php echo esc_html( $item['name'] ); ?></h3>
 				<p class="product-card__age"><span>対象月齢</span><?php echo esc_html( $item['age'] ); ?></p>
+				<?php if ( $external ) : ?><strong class="brand-card__cta">公式ショップを見る <?php echo rz_icon( 'arrow' ); ?></strong><?php endif; ?>
 			</div>
 		</a>
 		<?php if ( $show_compare ) : ?>
