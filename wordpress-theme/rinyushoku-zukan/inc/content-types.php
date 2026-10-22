@@ -165,7 +165,7 @@ function rz_shop_meta_box( $post ) {
 		<label><input type="checkbox" name="_rz_shop_is_pr" value="1" <?php checked( get_post_meta( $post->ID, '_rz_shop_is_pr', true ), '1' ); ?>> PR掲載</label>
 		<label><input type="checkbox" name="_rz_shop_is_sample" value="1" <?php checked( get_post_meta( $post->ID, '_rz_shop_is_sample', true ), '1' ); ?>> サンプル／デモデータ</label>
 		<p style="margin:0"><strong>公式ショップへのクリック数：</strong><?php echo esc_html( number_format_i18n( (int) get_post_meta( $post->ID, '_rz_shop_clicks', true ) ) ); ?>回</p>
-		<p style="margin:0;color:#646970">「新着」は公開日の新しい順、「人気」は公式ショップへのクリック数が多い順に自動表示されます。</p>
+		<p style="margin:0;color:#646970">「新着のベビーフードブランド」は、ショップの公開日が新しい順に自動表示されます。</p>
 		<p style="margin:0;color:#646970">右側の「対象月齢」「種類」「食材」で、このショップを表示するカテゴリーにチェックを入れてください。複数選択できます。</p>
 	</div>
 	<?php
