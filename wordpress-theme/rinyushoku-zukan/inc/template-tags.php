@@ -259,21 +259,18 @@ function rz_shop_card( $shop ) {
 	<?php
 }
 
-/** Fetch product cards from WordPress and use labeled demo data while empty. */
-function rz_get_product_cards( $section, $limit = 4 ) {
+/** Fetch homepage brand cards from the shop database. */
+function rz_get_home_brand_cards( $section, $limit = 4 ) {
 	$args = array(
-		'post_type'      => 'rz_product',
+		'post_type'      => 'rz_shop',
 		'post_status'    => 'publish',
-		'posts_per_page' => $limit,
+		'posts_per_page' => 'popular' === $section ? 100 : $limit,
 		'no_found_rows'  => true,
 	);
 	if ( 'featured' === $section ) {
-		$args['meta_key']   = '_rz_is_pr';
+		$args['meta_key']   = '_rz_shop_is_featured';
 		$args['meta_value'] = '1';
-	} elseif ( 'popular' === $section ) {
-		$args['meta_key'] = '_rz_views30d';
-		$args['orderby']  = 'meta_value_num';
-		$args['order']    = 'DESC';
+		$args['orderby']    = array( 'menu_order' => 'ASC', 'date' => 'DESC' );
 	} else {
 		$args['orderby'] = 'date';
 		$args['order']   = 'DESC';
@@ -284,23 +281,40 @@ function rz_get_product_cards( $section, $limit = 4 ) {
 	}
 	$items = array();
 	foreach ( $query->posts as $post ) {
-		$brands = get_the_terms( $post, 'rz_brand' );
-		$ages   = get_the_terms( $post, 'rz_age' );
+		$shop_url = esc_url_raw( get_post_meta( $post->ID, '_rz_shop_url', true ) );
+		if ( ! $shop_url ) {
+			continue;
+		}
+		$ages = get_the_terms( $post, 'rz_age' );
 		$items[] = array(
-			'id'        => (string) $post->ID,
+			'id'        => 'shop-' . $post->ID,
 			'name'      => get_the_title( $post ),
-			'brand'     => ( $brands && ! is_wp_error( $brands ) ) ? $brands[0]->name : '',
+			'brand'     => 'オンラインショップ',
 			'age'       => ( $ages && ! is_wp_error( $ages ) ) ? implode( '・', wp_list_pluck( $ages, 'name' ) ) : '公式サイトでご確認ください',
-			'url'       => get_permalink( $post ),
+			'url'       => add_query_arg( 'rz_shop_out', $post->ID, home_url( '/' ) ),
 			'image'     => get_the_post_thumbnail_url( $post, 'medium_large' ),
 			'alt'       => get_post_meta( get_post_thumbnail_id( $post ), '_wp_attachment_image_alt', true ),
-			'pr'        => '1' === get_post_meta( $post->ID, '_rz_is_pr', true ),
-			'sample'    => '1' === get_post_meta( $post->ID, '_rz_is_sample', true ),
+			'external'  => true,
+			'pr'        => false,
+			'sample'    => false,
 			'type'      => 'vegetable',
+			'_clicks'   => (int) get_post_meta( $post->ID, '_rz_shop_clicks', true ),
+			'_date'     => get_post_time( 'U', true, $post ),
 		);
 	}
 	wp_reset_postdata();
-	return $items;
+	if ( ! $items ) {
+		return rz_demo_products( $section );
+	}
+	if ( 'popular' === $section ) {
+		usort(
+			$items,
+			function( $a, $b ) {
+				return $a['_clicks'] === $b['_clicks'] ? $b['_date'] <=> $a['_date'] : $b['_clicks'] <=> $a['_clicks'];
+			}
+		);
+	}
+	return array_slice( $items, 0, $limit );
 }
 
 /** Output a product card shared by the home and archive templates. */
