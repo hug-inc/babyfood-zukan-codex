@@ -115,19 +115,15 @@ $ingredients = array(
 			<?php rz_section_heading( 'COLUMN', 'お役立ち記事' ); ?>
 			<div class="article-grid">
 			<?php
-			$default_post   = get_page_by_path( 'hello-world', OBJECT, 'post' );
-			$excluded_posts = $default_post instanceof WP_Post ? array( $default_post->ID ) : array();
-			$article_query  = new WP_Query(
-				array(
-					'post_type'      => 'post',
-					'post_status'    => 'publish',
-					'posts_per_page' => 3,
-					'no_found_rows'  => true,
-					'post__not_in'   => $excluded_posts,
-				)
-			);
+			$article_query = new WP_Query( array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 4, 'no_found_rows' => true ) );
+			$has_articles  = false;
 			if ( $article_query->have_posts() ) :
-				while ( $article_query->have_posts() ) : $article_query->the_post();
+				while ( $article_query->have_posts() ) :
+					$article_query->the_post();
+					if ( 'hello-world' === get_post_field( 'post_name', get_the_ID() ) ) {
+						continue;
+					}
+					$has_articles       = true;
 					$article_categories = get_the_category();
 					$article_category   = $article_categories ? $article_categories[0]->name : __( 'お役立ち記事', 'rinyushoku-zukan' );
 					?>
@@ -135,7 +131,9 @@ $ingredients = array(
 					<?php
 				endwhile;
 				wp_reset_postdata();
-			else :
+			endif;
+			if ( ! $has_articles ) :
+				?>
 				<p class="article-empty" role="status">現在投稿はありません。</p>
 			<?php endif; ?>
 			</div>
