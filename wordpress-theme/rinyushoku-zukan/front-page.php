@@ -144,8 +144,8 @@ $ingredients = array(
 		<div class="site-container">
 			<div class="maker-cta__inner">
 				<img src="<?php echo esc_url( rz_asset( 'images/veggies-row.png' ) ); ?>" alt="" aria-hidden="true" loading="lazy">
-				<div><p>FOR MAKERS</p><h2 id="for-makers-title">ベビーフードメーカーの方へ</h2><span>商品掲載は無料です。月齢や食材で探しているご家庭に、<br>貴社の商品を届けませんか。</span></div>
-				<div class="maker-cta__buttons"><a class="button button--primary" href="<?php echo esc_url( home_url( '/for-makers/#free' ) ); ?>"><?php echo rz_icon( 'store' ); ?>商品を無料掲載する</a><a class="button button--outline" href="<?php echo esc_url( home_url( '/for-makers/#ads' ) ); ?>"><?php echo rz_icon( 'megaphone' ); ?>広告掲載について</a></div>
+				<div><p>FOR MAKERS</p><h2 id="for-makers-title">ベビーフードメーカーの方へ</h2><span>月齢や食材で探しているご家庭に、<br>貴社の商品を届けませんか。</span></div>
+				<div class="maker-cta__buttons"><a class="button button--primary" href="<?php echo esc_url( home_url( '/for-makers/' ) ); ?>"><?php echo rz_icon( 'store' ); ?>掲載について</a></div>
 			</div>
 		</div>
 	</section>
