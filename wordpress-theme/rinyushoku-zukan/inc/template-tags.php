@@ -106,10 +106,7 @@ function rz_demo_products( $section ) {
 			array( 'id' => 'tedemogu', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'url' => 'https://shop.eatbyhand.co.jp/', 'external' => true, 'pr' => false, 'sample' => false, 'type' => 'vegetable' ),
 		),
 		'new' => array(
-			array( 'id' => 'sample-10', 'name' => 'きなこと米粉のスティック', 'brand' => 'まめまる工房（サンプル）', 'age' => '9〜18か月', 'sample' => true, 'type' => 'beans' ),
-			array( 'id' => 'sample-12', 'name' => 'さけと野菜の和風リゾット', 'brand' => 'こつぶ食堂（サンプル）', 'age' => '9〜18か月', 'sample' => true, 'type' => 'fish' ),
-			array( 'id' => 'sample-08', 'name' => 'ミニ牛そぼろごはん', 'brand' => 'そよかぜファーム（サンプル）', 'age' => '12か月〜', 'sample' => true, 'type' => 'meat' ),
-			array( 'id' => 'sample-04', 'name' => 'とりささみと根菜の煮もの', 'brand' => 'ひだまりキッチン（サンプル）', 'age' => '9〜11か月', 'sample' => true, 'type' => 'vegetable' ),
+			array( 'id' => 'tedemogu-new', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'url' => 'https://shop.eatbyhand.co.jp/', 'external' => true, 'pr' => false, 'sample' => false, 'type' => 'vegetable' ),
 		),
 		'popular' => array(
 			array( 'id' => 'sample-06', 'name' => 'りんごとさつまいものボーロ', 'brand' => 'こつぶ食堂（サンプル）', 'age' => '9〜18か月', 'sample' => true, 'type' => 'fruit' ),
