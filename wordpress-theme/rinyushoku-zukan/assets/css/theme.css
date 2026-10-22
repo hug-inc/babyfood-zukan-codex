@@ -18,3 +18,4 @@
 .shop-grid{grid-template-columns:minmax(0,1fr);max-width:760px}.shop-card .product-card__visual{aspect-ratio:16/7;background:#fff8c9}.shop-card .product-card__visual img{object-fit:contain}
 .product-grid.product-grid--brand-showcase{grid-template-columns:minmax(0,360px);justify-content:center}
 .brand-card__cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;border-top:1px solid var(--border);padding-top:10px;color:var(--brand-dark);font-size:11px}.brand-card__cta .icon{width:16px;height:16px}
+.article-empty{margin:0;border-radius:22px;background:var(--cream);padding:28px 20px;text-align:center;color:var(--ink-soft);font-size:14px}
