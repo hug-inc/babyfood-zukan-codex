@@ -23,12 +23,12 @@ $types = array(
 	array( 'slug' => 'snack', 'label' => 'おやつ', 'description' => '補食やごほうびに', 'icon' => 'cookie' ),
 );
 $ingredients = array(
-	array( 'slug' => 'rice', 'label' => '米', 'symbol' => '米' ),
-	array( 'slug' => 'vegetable', 'label' => '野菜', 'symbol' => '菜' ),
-	array( 'slug' => 'fish', 'label' => '魚', 'symbol' => '魚' ),
-	array( 'slug' => 'meat', 'label' => '肉', 'symbol' => '肉' ),
-	array( 'slug' => 'beans', 'label' => '豆類', 'symbol' => '豆' ),
-	array( 'slug' => 'fruit', 'label' => '果物', 'symbol' => '果' ),
+	array( 'slug' => 'rice', 'label' => '米' ),
+	array( 'slug' => 'vegetable', 'label' => '野菜' ),
+	array( 'slug' => 'fish', 'label' => '魚' ),
+	array( 'slug' => 'meat', 'label' => '肉' ),
+	array( 'slug' => 'beans', 'label' => '豆類' ),
+	array( 'slug' => 'fruit', 'label' => '果物' ),
 );
 ?>
 <main id="main-content">
@@ -85,7 +85,7 @@ $ingredients = array(
 			<?php rz_section_heading( 'BY INGREDIENT', '食材から探す' ); ?>
 			<ul class="ingredient-grid">
 				<?php foreach ( $ingredients as $ingredient ) : ?>
-					<li><a class="ingredient-card ingredient-card--<?php echo esc_attr( $ingredient['slug'] ); ?>" href="<?php echo esc_url( add_query_arg( 'ingredient', $ingredient['slug'], $archive_url ) ); ?>"><span aria-hidden="true"><?php echo esc_html( $ingredient['symbol'] ); ?></span><strong><?php echo esc_html( $ingredient['label'] ); ?></strong></a></li>
+					<li><a class="ingredient-card ingredient-card--<?php echo esc_attr( $ingredient['slug'] ); ?>" href="<?php echo esc_url( add_query_arg( 'ingredient', $ingredient['slug'], $archive_url ) ); ?>"><span class="ingredient-card__icon"><?php echo rz_ingredient_icon( $ingredient['slug'] ); ?></span><strong><?php echo esc_html( $ingredient['label'] ); ?></strong></a></li>
 				<?php endforeach; ?>
 			</ul>
 		</div>
