@@ -109,10 +109,7 @@ function rz_demo_products( $section ) {
 			array( 'id' => 'tedemogu-new', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'url' => 'https://shop.eatbyhand.co.jp/', 'external' => true, 'pr' => false, 'sample' => false, 'type' => 'vegetable' ),
 		),
 		'popular' => array(
-			array( 'id' => 'sample-06', 'name' => 'りんごとさつまいものボーロ', 'brand' => 'こつぶ食堂（サンプル）', 'age' => '9〜18か月', 'sample' => true, 'type' => 'fruit' ),
-			array( 'id' => 'sample-03', 'name' => 'しらすと野菜のおやき', 'brand' => 'まめまる工房（サンプル）', 'age' => '9〜18か月', 'sample' => true, 'pr' => true, 'type' => 'fish' ),
-			array( 'id' => 'sample-01', 'name' => 'やさしい10倍がゆ', 'brand' => 'ひだまりキッチン（サンプル）', 'age' => '5〜6か月', 'sample' => true, 'pr' => true, 'type' => 'rice' ),
-			array( 'id' => 'sample-09', 'name' => 'バナナとりんごのピューレ', 'brand' => 'ひだまりキッチン（サンプル）', 'age' => '5〜8か月', 'sample' => true, 'type' => 'fruit' ),
+			array( 'id' => 'tedemogu-popular', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'url' => 'https://shop.eatbyhand.co.jp/', 'external' => true, 'pr' => false, 'sample' => false, 'type' => 'vegetable' ),
 		),
 	);
 	return isset( $sets[ $section ] ) ? $sets[ $section ] : array();
