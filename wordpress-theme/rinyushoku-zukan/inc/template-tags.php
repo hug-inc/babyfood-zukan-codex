@@ -103,10 +103,7 @@ function rz_default_menu( $args = array() ) {
 function rz_demo_products( $section ) {
 	$sets = array(
 		'featured' => array(
-			array( 'id' => 'tedemogu', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'pr' => true, 'sample' => false, 'type' => 'vegetable' ),
-			array( 'id' => 'sample-01', 'name' => 'やさしい10倍がゆ', 'brand' => 'ひだまりキッチン（サンプル）', 'age' => '5〜6か月', 'pr' => true, 'sample' => true, 'type' => 'rice' ),
-			array( 'id' => 'sample-02', 'name' => 'にんじんとかぼちゃのペースト', 'brand' => 'こつぶ食堂（サンプル）', 'age' => '5〜8か月', 'pr' => true, 'sample' => true, 'type' => 'vegetable' ),
-			array( 'id' => 'sample-03', 'name' => 'しらすと野菜のおやき', 'brand' => 'まめまる工房（サンプル）', 'age' => '9〜18か月', 'pr' => true, 'sample' => true, 'type' => 'fish' ),
+			array( 'id' => 'tedemogu', 'name' => 'てでもぐ（TEDEMOGU）', 'brand' => 'てでもぐ', 'age' => '公式サイトでご確認ください', 'image' => 'images/tedemogu-product.webp', 'alt' => 'てでもぐの商品をお皿に盛り付けた様子', 'pr' => false, 'sample' => false, 'type' => 'vegetable' ),
 		),
 		'new' => array(
 			array( 'id' => 'sample-10', 'name' => 'きなこと米粉のスティック', 'brand' => 'まめまる工房（サンプル）', 'age' => '9〜18か月', 'sample' => true, 'type' => 'beans' ),
@@ -313,11 +310,11 @@ function rz_get_product_cards( $section, $limit = 4 ) {
 }
 
 /** Output a product card shared by the home and archive templates. */
-function rz_product_card( $item, $rank = 0 ) {
+function rz_product_card( $item, $rank = 0, $show_compare = true, $show_pr = true ) {
 	$url      = ! empty( $item['url'] ) ? $item['url'] : get_post_type_archive_link( 'rz_product' );
 	$image    = ! empty( $item['image'] ) ? ( preg_match( '#^https?://#', $item['image'] ) ? $item['image'] : rz_asset( $item['image'] ) ) : '';
 	$type     = ! empty( $item['type'] ) ? $item['type'] : 'vegetable';
-	$is_pr    = ! empty( $item['pr'] );
+	$is_pr    = $show_pr && ! empty( $item['pr'] );
 	$is_demo  = ! empty( $item['sample'] );
 	?>
 	<article class="product-card<?php echo $is_pr ? ' product-card--pr' : ''; ?>" aria-label="<?php echo esc_attr( $is_pr ? 'PR商品：' . $item['name'] : $item['name'] ); ?>">
@@ -340,9 +337,11 @@ function rz_product_card( $item, $rank = 0 ) {
 				<p class="product-card__age"><span>対象月齢</span><?php echo esc_html( $item['age'] ); ?></p>
 			</div>
 		</a>
-		<button class="compare-button" type="button" data-compare-id="<?php echo esc_attr( $item['id'] ); ?>" data-compare-name="<?php echo esc_attr( $item['name'] ); ?>" aria-pressed="false">
-			<?php echo rz_icon( 'plus' ); ?><span>比較に追加</span>
-		</button>
+		<?php if ( $show_compare ) : ?>
+			<button class="compare-button" type="button" data-compare-id="<?php echo esc_attr( $item['id'] ); ?>" data-compare-name="<?php echo esc_attr( $item['name'] ); ?>" aria-pressed="false">
+				<?php echo rz_icon( 'plus' ); ?><span>比較に追加</span>
+			</button>
+		<?php endif; ?>
 	</article>
 	<?php
 }
