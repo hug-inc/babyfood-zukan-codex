@@ -95,20 +95,18 @@ $ingredients = array(
 	$sections = array(
 		array( 'id' => 'featured', 'en' => 'PICK UP', 'title' => '注目のベビーフードブランド', 'class' => 'product-section--featured', 'rank' => false ),
 		array( 'id' => 'new', 'en' => 'NEW ARRIVALS', 'title' => '新着のベビーフードブランド', 'class' => '', 'rank' => false ),
-		array( 'id' => 'popular', 'en' => 'RANKING', 'title' => '人気のベビーフードブランド', 'class' => 'product-section--white', 'rank' => true ),
+		array( 'id' => 'popular', 'en' => 'POPULAR', 'title' => '人気のベビーフードブランド', 'class' => 'product-section--white', 'rank' => false ),
 	);
 	foreach ( $sections as $section ) :
 		$products = rz_get_product_cards( $section['id'], 4 );
-		$is_brand_section = in_array( $section['id'], array( 'featured', 'new' ), true );
+		$is_brand_section = in_array( $section['id'], array( 'featured', 'new', 'popular' ), true );
 		?>
 		<section id="<?php echo esc_attr( $section['id'] ); ?>" class="home-section product-section <?php echo esc_attr( $section['class'] ); ?>" aria-labelledby="<?php echo esc_attr( $section['id'] ); ?>-title">
 			<div class="site-container">
 				<?php rz_section_heading( $section['en'], $section['title'] ); ?>
-				<?php if ( $section['rank'] ) : ?><p class="ranking-note"><?php echo rz_icon( 'info' ); ?>過去30日間の商品詳細ページ閲覧数をもとに集計（毎日更新）</p><?php endif; ?>
 				<ul class="product-grid<?php echo $is_brand_section ? ' product-grid--brand-showcase' : ''; ?>">
 					<?php foreach ( $products as $index => $product ) : ?><li><?php rz_product_card( $product, $section['rank'] ? $index + 1 : 0, ! $is_brand_section, ! $is_brand_section ); ?></li><?php endforeach; ?>
 				</ul>
-				<?php if ( 'popular' === $section['id'] ) : ?><p class="pr-note"><span class="badge badge--pr">PR</span>「PR」表示のある商品は、メーカーから広告掲載料をいただいて掲載しています。</p><?php endif; ?>
 			</div>
 		</section>
 	<?php endforeach; ?>
