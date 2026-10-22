@@ -104,10 +104,10 @@ $ingredients = array(
 			<div class="site-container">
 				<?php rz_section_heading( $section['en'], $section['title'] ); ?>
 				<?php if ( $section['rank'] ) : ?><p class="ranking-note"><?php echo rz_icon( 'info' ); ?>過去30日間の商品詳細ページ閲覧数をもとに集計（毎日更新）</p><?php endif; ?>
-				<ul class="product-grid">
-					<?php foreach ( $products as $index => $product ) : ?><li><?php rz_product_card( $product, $section['rank'] ? $index + 1 : 0 ); ?></li><?php endforeach; ?>
+				<ul class="product-grid<?php echo 'featured' === $section['id'] ? ' product-grid--featured-brand' : ''; ?>">
+					<?php foreach ( $products as $index => $product ) : ?><li><?php rz_product_card( $product, $section['rank'] ? $index + 1 : 0, 'featured' !== $section['id'], 'featured' !== $section['id'] ); ?></li><?php endforeach; ?>
 				</ul>
-				<?php if ( 'featured' === $section['id'] || 'popular' === $section['id'] ) : ?><p class="pr-note"><span class="badge badge--pr">PR</span>「PR」表示のある商品は、メーカーから広告掲載料をいただいて掲載しています。</p><?php endif; ?>
+				<?php if ( 'popular' === $section['id'] ) : ?><p class="pr-note"><span class="badge badge--pr">PR</span>「PR」表示のある商品は、メーカーから広告掲載料をいただいて掲載しています。</p><?php endif; ?>
 			</div>
 		</section>
 	<?php endforeach; ?>
