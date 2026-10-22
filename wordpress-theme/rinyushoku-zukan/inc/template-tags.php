@@ -132,8 +132,24 @@ function rz_demo_products_by_age( $age ) {
 }
 
 /** Initial featured shop used until editors publish shop entries. */
-function rz_featured_shops_by_age( $age ) {
-	if ( ! in_array( $age, array( '9-11', '12-18' ), true ) ) {
+function rz_featured_shops_for_filters( $filters ) {
+	$allowed_filters = array(
+		'age'        => array( '9-11', '12-18' ),
+		'type'       => array( 'frozen', 'tezukami' ),
+		'ingredient' => array(),
+	);
+	$has_filter = false;
+	foreach ( $allowed_filters as $param => $allowed_values ) {
+		$value = isset( $filters[ $param ] ) ? $filters[ $param ] : '';
+		if ( '' === $value ) {
+			continue;
+		}
+		$has_filter = true;
+		if ( ! in_array( $value, $allowed_values, true ) ) {
+			return array();
+		}
+	}
+	if ( ! $has_filter ) {
 		return array();
 	}
 
