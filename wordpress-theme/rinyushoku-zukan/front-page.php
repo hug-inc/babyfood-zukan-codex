@@ -95,11 +95,10 @@ $ingredients = array(
 	$sections = array(
 		array( 'id' => 'featured', 'en' => 'PICK UP', 'title' => '注目のベビーフードブランド', 'class' => 'product-section--featured', 'rank' => false ),
 		array( 'id' => 'new', 'en' => 'NEW ARRIVALS', 'title' => '新着のベビーフードブランド', 'class' => '', 'rank' => false ),
-		array( 'id' => 'popular', 'en' => 'POPULAR', 'title' => '人気のベビーフードブランド', 'class' => 'product-section--white', 'rank' => false ),
 	);
 	foreach ( $sections as $section ) :
 		$products = rz_get_home_brand_cards( $section['id'], 4 );
-		$is_brand_section = in_array( $section['id'], array( 'featured', 'new', 'popular' ), true );
+		$is_brand_section = in_array( $section['id'], array( 'featured', 'new' ), true );
 		?>
 		<section id="<?php echo esc_attr( $section['id'] ); ?>" class="home-section product-section <?php echo esc_attr( $section['class'] ); ?>" aria-labelledby="<?php echo esc_attr( $section['id'] ); ?>-title">
 			<div class="site-container">
