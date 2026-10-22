@@ -115,7 +115,17 @@ $ingredients = array(
 			<?php rz_section_heading( 'COLUMN', 'お役立ち記事' ); ?>
 			<div class="article-grid">
 			<?php
-			$article_query = new WP_Query( array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 3, 'no_found_rows' => true ) );
+			$default_post   = get_page_by_path( 'hello-world', OBJECT, 'post' );
+			$excluded_posts = $default_post instanceof WP_Post ? array( $default_post->ID ) : array();
+			$article_query  = new WP_Query(
+				array(
+					'post_type'      => 'post',
+					'post_status'    => 'publish',
+					'posts_per_page' => 3,
+					'no_found_rows'  => true,
+					'post__not_in'   => $excluded_posts,
+				)
+			);
 			if ( $article_query->have_posts() ) :
 				while ( $article_query->have_posts() ) : $article_query->the_post();
 					$article_categories = get_the_category();
@@ -126,15 +136,7 @@ $ingredients = array(
 				endwhile;
 				wp_reset_postdata();
 			else :
-				$demo_articles = array(
-					array( 'category' => '離乳食の進め方', 'title' => '離乳食はいつから？月齢ごとの進め方とベビーフードの上手な取り入れ方', 'image' => 'article-start.webp', 'alt' => 'トレーに並んだ離乳食の前に座る赤ちゃん' ),
-					array( 'category' => '手づかみ食べ', 'title' => '手づかみ食べはいつから？はじめどきのサインと食べやすい形のポイント', 'image' => 'article-tezukami.webp', 'alt' => '小さな手で手づかみ食べ用のおやきを持つ赤ちゃん' ),
-					array( 'category' => '冷凍離乳食の選び方', 'title' => '冷凍離乳食の選び方｜保存・解凍のコツと比較するときのチェックポイント', 'image' => 'article-frozen.webp', 'alt' => '冷凍庫から小分けの離乳食を取り出すママと赤ちゃん' ),
-				);
-				foreach ( $demo_articles as $article ) :
-					?>
-					<article class="article-card"><a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><img src="<?php echo esc_url( rz_asset( 'images/' . $article['image'] ) ); ?>" alt="<?php echo esc_attr( $article['alt'] ); ?>" loading="lazy" width="640" height="400"><div><span class="chip"><?php echo esc_html( $article['category'] ); ?></span><h3><?php echo esc_html( $article['title'] ); ?></h3><strong>記事を読む <?php echo rz_icon( 'arrow' ); ?></strong></div></a></article>
-				<?php endforeach; ?>
+				<p class="article-empty" role="status">現在投稿はありません。</p>
 			<?php endif; ?>
 			</div>
 		</div>
